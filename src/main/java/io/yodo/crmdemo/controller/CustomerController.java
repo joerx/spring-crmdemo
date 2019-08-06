@@ -12,6 +12,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.util.List;
 
+import static io.yodo.crmdemo.helper.FlashHelper.setFlashInfo;
+import static io.yodo.crmdemo.helper.FlashHelper.setFlashErr;
+
 @Controller
 @RequestMapping("/customer")
 public class CustomerController {
@@ -64,7 +67,7 @@ public class CustomerController {
         }
 
         customerService.createCustomer(customer);
-        setFlash(ra, "Customer saved (id="+customer.getId()+")");
+        setFlashInfo(ra, "Customer saved (id="+customer.getId()+")");
 
         return REDIRECT_CUSTOMER_LIST;
     }
@@ -81,7 +84,7 @@ public class CustomerController {
         }
 
         customerService.updateCustomer(customer);
-        setFlash(ra, "Customer updated");
+        setFlashInfo(ra, "Customer updated");
 
         return REDIRECT_CUSTOMER_LIST;
     }
@@ -96,21 +99,12 @@ public class CustomerController {
         }
 
         customerService.deleteCustomer(customer);
-        setFlash(ra, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " was deleted");
+        setFlashInfo(ra, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " was deleted");
 
         return "redirect:/customer/list";
     }
 
-    private void setFlash(RedirectAttributes ra, String message) {
-        ra.addFlashAttribute("flashMsg", message);
-    }
-
-    private void setFlashErr(RedirectAttributes ra, String message) {
-        ra.addFlashAttribute("flashErr", message);
-    }
-
-    private void populateModel(Model model, Customer customer, String title, String action
-    ) {
+    private void populateModel(Model model, Customer customer, String title, String action) {
         model.addAttribute("customer", customer);
         model.addAttribute("title", title);
         model.addAttribute("action", action);
