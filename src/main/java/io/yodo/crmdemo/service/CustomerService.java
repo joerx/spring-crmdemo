@@ -7,4 +7,7 @@ import java.util.List;
 public interface CustomerService {
 
     List<Customer> getCustomers();
+
+    @SuppressWarnings("UnusedReturnValue")
+    Customer createCustomer(Customer customer);
 }

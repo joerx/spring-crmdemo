@@ -1,6 +1,9 @@
 package io.yodo.crmdemo.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="customer")
@@ -12,12 +15,19 @@ public class Customer {
     private int id;
 
     @Column(name="first_name")
+    @NotNull(message="is required")
+    @Size(min=1, message="is required")
     private String firstName;
 
     @Column(name="last_name")
+    @NotNull(message="is required")
+    @Size(min=1, message="is required")
     private String lastName;
 
     @Column(name="email")
+    @NotNull(message="is required")
+    @Size(min=1, message="is required")
+//    @Email(message = "must be a valid email address")
     private String email;
 
     public Customer() {
