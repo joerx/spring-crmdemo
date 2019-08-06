@@ -1,6 +1,3 @@
-<jsp:useBean id="title" scope="request" type="java.lang.String"/>
-<jsp:useBean id="customer" scope="request" type="io.yodo.crmdemo.entity.Customer"/>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -21,7 +18,9 @@
 
             <h2>${title}</h2>
 
-            <form:form action="create" modelAttribute="customer" method="post">
+            <form:form action="${pageContext.request.contextPath}/customer/${action}" modelAttribute="customer" method="post">
+
+                <form:hidden path="id"/>
 
                 <%-- first name --%>
                 <div class="form-group">

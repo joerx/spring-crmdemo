@@ -1,15 +1,12 @@
 package io.yodo.crmdemo.controller;
 
-import io.yodo.crmdemo.dao.CustomerDAO;
 import io.yodo.crmdemo.entity.Customer;
 import io.yodo.crmdemo.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -21,13 +18,15 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    private static final String REDIRECT_CUSTOMER_LIST = "redirect:/customer/list";
+
     @Autowired
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String list(Model model) {
+    public String listCustomers(Model model) {
         List<Customer> customers = customerService.getCustomers();
 
         model.addAttribute("customers", customers);
@@ -38,11 +37,19 @@ public class CustomerController {
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String newCustomer(Model model) {
         Customer customer = new Customer();
+        return prepareViewForCreate(model, customer);
+    }
 
-        model.addAttribute("customer", customer);
-        model.addAttribute("title", "New Customer");
+    @RequestMapping(value = "/edit/{customerId}", method = RequestMethod.GET)
+    public String editCustomer(Model model, @PathVariable int customerId, RedirectAttributes ra) {
+        Customer customer = customerService.getCustomer(customerId);
 
-        return "customer-form";
+        if (customer == null) {
+            setFlashErr(ra, "Customer with id "+customerId+" not found");
+            return REDIRECT_CUSTOMER_LIST;
+        }
+
+        return prepareViewForUpdate(model, customer);
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -53,14 +60,69 @@ public class CustomerController {
             RedirectAttributes ra
     ) {
         if (binding.hasErrors()) {
-            model.addAttribute("customer", customer);
-            model.addAttribute("title", "New Customer");
-            return "customer-form";
+            return prepareViewForCreate(model, customer);
         }
 
         customerService.createCustomer(customer);
-        ra.addFlashAttribute("flashMsg", "Customer saved (id="+customer.getId()+")");
+        setFlash(ra, "Customer saved (id="+customer.getId()+")");
+
+        return REDIRECT_CUSTOMER_LIST;
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public String updateCustomer(
+            @Valid @ModelAttribute("customer") Customer customer,
+            BindingResult binding,
+            Model model,
+            RedirectAttributes ra
+    ) {
+        if (binding.hasErrors()) {
+            return prepareViewForUpdate(model, customer);
+        }
+
+        customerService.updateCustomer(customer);
+        setFlash(ra, "Customer updated");
+
+        return REDIRECT_CUSTOMER_LIST;
+    }
+
+    @RequestMapping(value = "/delete/{customerId}", method = RequestMethod.GET)
+    public String deleteCustomers(@PathVariable int customerId, RedirectAttributes ra) {
+        Customer customer = customerService.getCustomer(customerId);
+
+        if (customer == null) {
+            setFlashErr(ra, "Customer with id "+customerId+" not found");
+            return REDIRECT_CUSTOMER_LIST;
+        }
+
+        customerService.deleteCustomer(customer);
+        setFlash(ra, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " was deleted");
 
         return "redirect:/customer/list";
+    }
+
+    private void setFlash(RedirectAttributes ra, String message) {
+        ra.addFlashAttribute("flashMsg", message);
+    }
+
+    private void setFlashErr(RedirectAttributes ra, String message) {
+        ra.addFlashAttribute("flashErr", message);
+    }
+
+    private void populateModel(Model model, Customer customer, String title, String action
+    ) {
+        model.addAttribute("customer", customer);
+        model.addAttribute("title", title);
+        model.addAttribute("action", action);
+    }
+
+    private String prepareViewForCreate(Model model, Customer customer) {
+        populateModel(model, customer, "New Customer", "create");
+        return "customer-form";
+    }
+
+    private String prepareViewForUpdate(Model model, Customer customer) {
+        populateModel(model, customer, "Edit Customer", "update");
+        return "customer-form";
     }
 }

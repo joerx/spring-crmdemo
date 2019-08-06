@@ -30,6 +30,7 @@
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
+                    <th>&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,6 +40,10 @@
                         <td>${customer.firstName}</td>
                         <td>${customer.lastName}</td>
                         <td>${customer.email}</td>
+                        <td>
+                            <a href="${pageContext.request.contextPath}/customer/edit/${customer.id}">Edit</a>&nbsp;
+                            <a href="${pageContext.request.contextPath}/customer/delete/${customer.id}">Delete</a>
+                        </td>
                     </tr>
                 </c:forEach>
                 </tbody>
