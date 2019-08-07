@@ -10,6 +10,7 @@
     <title>Customer List</title>
 </head>
 <body>
+
 <jsp:include page="fragments/navbar.jsp" />
 
 <main class="container-fluid" id="main">
@@ -17,6 +18,8 @@
         <div class="col">
 
             <h2>${title}</h2>
+
+            <p><a href="${pageContext.request.contextPath}">Back</a></p>
 
             <form:form action="${pageContext.request.contextPath}/customer/${action}" modelAttribute="customer" method="post">
 
