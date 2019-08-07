@@ -3,6 +3,7 @@ package io.yodo.crmdemo.dao;
 import io.yodo.crmdemo.entity.Customer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -57,5 +58,23 @@ public class CustomerDAOImpl implements CustomerDAO {
         Session sess = sessionFactory.getCurrentSession();
 
         sess.delete(customer);
+    }
+
+    @Override
+    public List<Customer> findCustomers(String query) {
+        Session sess = sessionFactory.getCurrentSession();
+
+        if (query == null || query.trim().length() == 0) {
+            return sess.createQuery("from Customer", Customer.class).getResultList();
+
+        } else {
+            Query<Customer> q = sess.createQuery(
+                    "from Customer where lower(firstName) like :query or lower(lastName) like :query ",
+                    Customer.class
+            );
+            q.setParameter("query", "%"+query.toLowerCase()+"%");
+
+            return q.getResultList();
+        }
     }
 }

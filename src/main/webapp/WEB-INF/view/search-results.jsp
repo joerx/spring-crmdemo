@@ -13,15 +13,7 @@
 <main class="container-fluid" id="main">
     <div class="row">
         <div class="col">
-            <h2>Customers</h2>
-
-            <jsp:include page="fragments/flash.jsp"/>
-
-            <p>
-                <a class="btn btn-light" href="${pageContext.request.contextPath}/customer/new">
-                    Add Customer
-                </a>
-            </p>
+            <h2>Search Results</h2>
 
             <jsp:include page="fragments/customer-list.jsp"/>
 
