@@ -41,8 +41,13 @@
                         <td>${customer.lastName}</td>
                         <td>${customer.email}</td>
                         <td>
-                            <a href="${pageContext.request.contextPath}/customer/edit/${customer.id}">Edit</a>&nbsp;
-                            <a href="${pageContext.request.contextPath}/customer/delete/${customer.id}">Delete</a>
+                            <a href="${pageContext.request.contextPath}/customer/edit/${customer.id}">
+                                Edit
+                            </a>&nbsp;
+                            <a href="${pageContext.request.contextPath}/customer/delete/${customer.id}"
+                                onclick="if (!confirm('Are you sure you want to do this?')) return false">
+                                Delete
+                            </a>
                         </td>
                     </tr>
                 </c:forEach>
