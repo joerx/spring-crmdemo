@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface CustomerDAO {
 
-    List<Customer> getCustomers();
+    List<Customer> findAllCustomers();
 
     void createCustomer(Customer customer);
 
-    Customer getCustomer(int customerId);
+    Customer findCustomer(int customerId);
 
     void updateCustomer(Customer customer);
 

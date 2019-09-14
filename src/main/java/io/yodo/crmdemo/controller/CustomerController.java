@@ -30,7 +30,7 @@ public class CustomerController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listCustomers(Model model) {
-        List<Customer> customers = customerService.getCustomers();
+        List<Customer> customers = customerService.findAllCustomers();
 
         model.addAttribute("customers", customers);
 
@@ -45,7 +45,7 @@ public class CustomerController {
 
     @RequestMapping(value = "/edit/{customerId}", method = RequestMethod.GET)
     public String editCustomer(Model model, @PathVariable int customerId, RedirectAttributes ra) {
-        Customer customer = customerService.getCustomer(customerId);
+        Customer customer = customerService.findCustomer(customerId);
 
         if (customer == null) {
             setFlashErr(ra, "Customer with id "+customerId+" not found");
@@ -91,7 +91,7 @@ public class CustomerController {
 
     @RequestMapping(value = "/delete/{customerId}", method = RequestMethod.GET)
     public String deleteCustomers(@PathVariable int customerId, RedirectAttributes ra) {
-        Customer customer = customerService.getCustomer(customerId);
+        Customer customer = customerService.findCustomer(customerId);
 
         if (customer == null) {
             setFlashErr(ra, "Customer with id "+customerId+" not found");

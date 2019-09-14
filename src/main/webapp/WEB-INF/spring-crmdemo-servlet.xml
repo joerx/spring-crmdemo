@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-    xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:context="http://www.springframework.org/schema/context"
+			 xmlns:mvc="http://www.springframework.org/schema/mvc"
+			 xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+			 xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
     	http://www.springframework.org/schema/beans/spring-beans.xsd
     	http://www.springframework.org/schema/context
     	http://www.springframework.org/schema/context/spring-context.xsd
     	http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+      http://www.springframework.org/schema/mvc/spring-mvc.xsd
 	    http://www.springframework.org/schema/tx
-		http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+		  http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+		  http://www.springframework.org/schema/aop
+		  http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 	<!-- Step 3: Add support for component scanning -->
 	<context:component-scan base-package="io.yodo.crmdemo" />
@@ -42,7 +44,10 @@
 		<property name="maxIdleTime" value="30000" />
 	</bean>
 
-	<!-- hibernate session factory -->
+	<!-- @EnableAspectJAutoProxy -->
+	<aop:aspectj-autoproxy/>
+
+	<!-- Hibernate session factory -->
 	<bean id="sessionFactory"
 		  class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="dataSource" ref="myDataSource" />
@@ -55,20 +60,18 @@
 		</property>
 	</bean>
 
-	<!-- yeah, and whatever the fawk this is -->
+	<!-- Whatever the fawk this is -->
 	<bean id="myTransactionManager"
 		  class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 
-	<!-- more weird shit. who is supposed to keep all this crap in mind? -->
+	<!-- More weird shit. Who is supposed to keep all of this in mind? -->
 	<tx:annotation-driven transaction-manager="myTransactionManager" />
 
-	<!-- message source -->
+	<!-- Message source. Properties files. Everything is automagic, except when not ... -->
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basename" value="messages"/>
 	</bean>
-
-
 
 </beans>
