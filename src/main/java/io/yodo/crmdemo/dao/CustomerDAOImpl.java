@@ -27,36 +27,30 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public List<Customer> findAllCustomers() {
         Session sess = sessionFactory.getCurrentSession();
-
         return sess.createQuery("from Customer order by id asc", Customer.class).getResultList();
     }
 
     @Override
     public void createCustomer(Customer customer) {
         Session sess = sessionFactory.getCurrentSession();
-
         sess.save(customer);
     }
 
     @Override
     public Customer findCustomer(int customerId) {
         Session sess = sessionFactory.getCurrentSession();
-
         return sess.get(Customer.class, customerId);
     }
 
     @Override
     public void updateCustomer(Customer customer) {
         Session sess = sessionFactory.getCurrentSession();
-
         sess.update(customer);
-
     }
 
     @Override
     public void deleteCustomer(Customer customer) {
         Session sess = sessionFactory.getCurrentSession();
-
         sess.delete(customer);
     }
 
@@ -66,7 +60,6 @@ public class CustomerDAOImpl implements CustomerDAO {
 
         if (query == null || query.trim().length() == 0) {
             return sess.createQuery("from Customer", Customer.class).getResultList();
-
         } else {
             Query<Customer> q = sess.createQuery(
                     "from Customer where lower(firstName) like :query or lower(lastName) like :query ",

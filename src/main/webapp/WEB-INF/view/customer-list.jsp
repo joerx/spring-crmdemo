@@ -8,6 +8,7 @@
     <title>Customer List</title>
 </head>
 <body>
+
 <jsp:include page="fragments/navbar.jsp" />
 
 <main class="container-fluid" id="main">
